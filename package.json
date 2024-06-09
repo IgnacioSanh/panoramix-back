@@ -2,10 +2,32 @@
   "name": "mi-ciudad",
   "module": "index.ts",
   "type": "module",
+  "scripts": {
+    "run:local": "bun server-local.ts",
+    "lint": "eslint"
+  },
   "devDependencies": {
-    "bun-types": "latest"
+    "@eslint/eslintrc": "^3.0.2",
+    "@eslint/js": "^9.1.1",
+    "@types/cors": "^2.8.17",
+    "@types/express": "^4.17.21",
+    "@types/lowdb": "^1.0.15",
+    "@typescript-eslint/eslint-plugin": "^6.4.0",
+    "bun-types": "latest",
+    "eslint": "^9.1.1",
+    "eslint-config-standard-with-typescript": "^43.0.1",
+    "eslint-plugin-import": "^2.25.2",
+    "eslint-plugin-n": "^15.0.0 || ^16.0.0",
+    "eslint-plugin-promise": "^6.0.0",
+    "globals": "^15.0.0",
+    "lowdb": "^7.0.1",
+    "typescript": "*"
   },
   "peerDependencies": {
     "typescript": "^5.0.0"
+  },
+  "dependencies": {
+    "cors": "^2.8.5",
+    "express": "^4.19.2"
   }
 }
