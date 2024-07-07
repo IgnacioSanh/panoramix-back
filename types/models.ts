@@ -1,12 +1,8 @@
 import { Event } from "./event";
 
-export interface IMovieModel {
-	getAll: () => Promise<void>;
-}
-
 export interface BaseModel<T> {
-	getAll: () => Promise<T[]>;
-	getById: () => Promise<T | null>;
+	getAll: (page?: number, itemsPerPage?: number) => Promise<T[]>;
+	getById: (id: string) => Promise<T | undefined>;
 }
 
 export interface IEventModel extends BaseModel<Event> {

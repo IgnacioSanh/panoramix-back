@@ -1,10 +1,8 @@
 import { Event } from "_types/event";
 import { IEventModel } from "_types/models";
-import { JSONFilePreset } from "lowdb/node";
-import { Low } from "lowdb";
+import { createId } from "_utils/uuid";
 
-export class EventModel {
-	private _db: Low<Event[]> = {} as Low<Event[]>;
+export class EventModel implements IEventModel {
 	baseEvents: Event[] = [
 		{
 			id: "11",
@@ -24,13 +22,27 @@ export class EventModel {
 		},
 	];
 
-	constructor() {
-		JSONFilePreset<Event[]>("events.json", this.baseEvents).then((db) => {
-			this._db = db;
-		});
+	async create(event: Omit<Event, "id">) {
+		const newEvent: Event = {
+			...event,
+			id: createId(),
+		};
+		this.baseEvents.push(newEvent);
+		return Promise.resolve(newEvent);
 	}
 
-	async getAll() {
-		await this._db.read();
+	async getById(id: string) {
+		return Promise.resolve(
+			this.baseEvents.find((event) => event.id === id)
+		);
+	}
+
+	async getAll(page = 1, itemsPerPage = 10) {
+		return Promise.resolve(
+			this.baseEvents.slice(
+				(page - 1) * itemsPerPage,
+				page * itemsPerPage
+			)
+		);
 	}
 }
