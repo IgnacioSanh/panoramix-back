@@ -1,6 +1,7 @@
+import { Request, Response } from "express";
+import { z } from "zod";
 import { IEventModel } from "_types/models";
 import { Event } from "_types/event";
-import { z } from "zod";
 
 const EventSchema = z.object({
 	title: z.string({
@@ -15,6 +16,11 @@ const EventSchema = z.object({
 	venue: z.object({}),
 });
 
+interface GetAllQueryProps {
+	page?: number;
+	itemsPerPage?: number;
+}
+
 export class EventsController {
 	eventModel: IEventModel;
 
@@ -22,9 +28,14 @@ export class EventsController {
 		this.eventModel = eventModel;
 	}
 
-	async getAll(page = 1, itemsPerPage = 10) {
-		return await this.eventModel.getAll(page, itemsPerPage);
-	}
+	getAll = async (
+		req: Request<{}, {}, {}, GetAllQueryProps>,
+		res: Response
+	) => {
+		const { page = 1, itemsPerPage = 10 } = req.query;
+		const events = await this.eventModel.getAll(page, itemsPerPage);
+		return res.json(events);
+	};
 
 	async createEvent(event: Omit<Event, "id">) {
 		EventSchema.parse(event);

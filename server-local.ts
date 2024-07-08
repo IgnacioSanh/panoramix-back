@@ -1,3 +1,6 @@
 import { createApp } from "./index";
+import { EventModel } from "./models/local-file-system/event";
 
-createApp({});
+const eventsModel = new EventModel();
+
+createApp({ eventsModel });

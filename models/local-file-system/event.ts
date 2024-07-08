@@ -38,11 +38,8 @@ export class EventModel implements IEventModel {
 	}
 
 	async getAll(page = 1, itemsPerPage = 10) {
-		return Promise.resolve(
-			this.baseEvents.slice(
-				(page - 1) * itemsPerPage,
-				page * itemsPerPage
-			)
-		);
+		const start = (page - 1) * itemsPerPage;
+		const end = start + itemsPerPage;
+		return Promise.resolve(this.baseEvents.slice(start, end));
 	}
 }
