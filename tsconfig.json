@@ -23,7 +23,8 @@
 			"_utils/*": ["./utils/*"],
 			"_models/*": ["./models/*"],
 			"_controllers/*": ["./controllers/*"],
-			"_routes/*": ["./routes/*"]
+			"_routes/*": ["./routes/*"],
+			"_schemas/*": ["./schemas/*"]
 		}
 	}
 }

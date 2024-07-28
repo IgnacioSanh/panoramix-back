@@ -8,6 +8,10 @@ export const createEventRouter = (eventModel: IEventModel) => {
 	const eventController = new EventsController(eventModel);
 
 	eventsRouter.get("/", eventController.getAll);
+	eventsRouter.get("/:id", eventController.getById);
+	eventsRouter.post("/", eventController.create);
+	eventsRouter.delete("/:id", eventController.delete);
+	eventsRouter.patch("/:id", eventController.update);
 
 	return eventsRouter;
 };

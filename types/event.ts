@@ -14,3 +14,5 @@ export interface Event {
 	location: Location;
 	venue: Venue;
 }
+
+export type PartialEvent = Omit<Event, "id">

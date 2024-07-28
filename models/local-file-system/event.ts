@@ -1,4 +1,4 @@
-import { Event } from "_types/event";
+import { Event, PartialEvent } from "_types/event";
 import { IEventModel } from "_types/models";
 import { createId } from "_utils/uuid";
 
@@ -41,5 +41,20 @@ export class EventModel implements IEventModel {
 		const start = (page - 1) * itemsPerPage;
 		const end = start + itemsPerPage;
 		return Promise.resolve(this.baseEvents.slice(start, end));
+	}
+
+	async delete(id: string) {
+		this.baseEvents = this.baseEvents.filter(event => id !== event.id);
+		return Promise.resolve();
+	}
+
+	async update(id: string, partialEvent: Partial<PartialEvent>) {
+		const updatedEvent = {
+			...this.baseEvents.find(event => event.id === id),
+			...partialEvent,
+		} as Event
+		this.baseEvents = this.baseEvents.filter(event => event.id !== id);
+		this.baseEvents.push(updatedEvent);
+		return Promise.resolve(updatedEvent);
 	}
 }

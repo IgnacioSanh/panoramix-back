@@ -3,7 +3,7 @@
 	"module": "index.ts",
 	"type": "module",
 	"scripts": {
-		"run:local": "bun server-local.ts",
+		"run:local": "bun --watch server-local.ts",
 		"lint": "eslint"
 	},
 	"devDependencies": {

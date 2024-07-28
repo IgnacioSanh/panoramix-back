@@ -1,20 +1,7 @@
 import { Request, Response } from "express";
-import { z } from "zod";
 import { IEventModel } from "_types/models";
-import { Event } from "_types/event";
-
-const EventSchema = z.object({
-	title: z.string({
-		required_error: "Title is required",
-	}),
-	location: z.object({
-		lat: z.number(),
-		long: z.number(),
-		city: z.string(),
-		country: z.string(),
-	}),
-	venue: z.object({}),
-});
+import { PartialEvent } from "_types/event";
+import { validateEvent, validatePartialEvent } from "_schemas/events";
 
 interface GetAllQueryProps {
 	page?: number;
@@ -37,8 +24,49 @@ export class EventsController {
 		return res.json(events);
 	};
 
-	async createEvent(event: Omit<Event, "id">) {
-		EventSchema.parse(event);
-		this.eventModel.create(event);
+	getById = async (req: Request<{id: string}>, res: Response) => {
+		const event = await this.eventModel.getById(req.params.id);
+		if (event) {
+			return res.json(event);
+		}
+		return res.status(404).send('Not found');
+	}
+
+	create = async (req: Request<{}, {}, PartialEvent>, res: Response) => {
+		const event = req.body;
+		const {success, error} = validateEvent(event);
+		if (success) {
+			const createdEvent = await this.eventModel.create(event);
+			return res.json(createdEvent);
+		}
+		return res.status(400).json(error);
+	}
+
+	delete = async (req: Request<{id: string}>, res: Response) => {
+		const id = req.params.id;
+		const event = await this.eventModel.getById(id);
+		if (!event) {
+			return res.status(400).json({error: "The specified event doesn't exists"})
+		}
+		await this.eventModel.delete(id);
+		return res.json(event);
+	}
+
+	update = async (req: Request<{id: string}, {}, Partial<PartialEvent>>, res: Response) => {
+		const id = req.params.id;
+		const updatedData = req.body;
+
+		// Validate data
+		const {success, error} = validatePartialEvent(updatedData);
+		if (!success) {
+			return res.status(400).json(error);
+		}
+
+		const event = await this.eventModel.getById(id);
+		if (!event) {
+			return res.status(400).json({error: "The searched event id doesn't exist. Try with PUT method"});
+		}
+		const updatedEvent = await this.eventModel.update(id, updatedData);
+		return res.json(updatedEvent);
 	}
 }
