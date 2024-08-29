@@ -1,13 +1,15 @@
 import express, { json } from "express";
 import { corsMiddleware } from "./middlewares/cors";
 import { createEventRouter } from "_routes/events";
-import { IEventModel } from "_types/models";
+import {createGenreRouter} from '_routes/genres';
+import { IEventModel, IGenreModel } from "_types/models";
 
 interface CreateAppProps {
 	eventsModel: IEventModel;
+	genreModel: IGenreModel;
 }
 
-export const createApp = ({ eventsModel }: CreateAppProps) => {
+export const createApp = ({ eventsModel, genreModel }: CreateAppProps) => {
 	const app = express();
 
 	app.use(json());
@@ -15,6 +17,7 @@ export const createApp = ({ eventsModel }: CreateAppProps) => {
 	app.disable("x-powered-by");
 
 	app.use("/events", createEventRouter(eventsModel));
+	app.use("/genres", createGenreRouter(genreModel));
 
 	const PORT = process.env.PORT || 4000;
 
